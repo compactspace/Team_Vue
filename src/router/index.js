@@ -16,6 +16,10 @@ import Qna from "../views/Qna/QuesnAnsw.vue";
 import Resume from "../views/Apply/Resume/Resume.vue";
 import History from "../views/Apply/History/History.vue";
 
+import Applicant from "../views/Applicant/Applicant.vue";
+import Withdraw from "../views/Withdraw/Withdraw.vue";
+import path from "path";
+
 const routes = [
   {
     path: "/",
@@ -106,6 +110,14 @@ const routes = [
             name: "hire-post-create",
             component: HirePostEditor,
           },
+
+          {
+            path:"applicant.do",
+            name: "applicantList",
+            component:Applicant,
+          }
+
+
         ],
       },
       {
@@ -146,6 +158,28 @@ const routes = [
           },
         ],
       },
+
+
+      {
+        path:'mypage',
+        name:"mypage",
+        children:[
+
+            {
+
+                path:"withdraw.do",
+                name:"withdraw",
+                component:Withdraw
+                
+                }
+        ]
+
+
+      }
+
+
+
+      
     ],
   },
 ];

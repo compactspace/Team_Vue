@@ -11,6 +11,23 @@ export const Post = {
   SearchPostList: "/prx/api/jobs/readPostList.do",
 };
 
+
+export const Applicant={
+
+    ApplicantManagerGetId:"/prx/api/manage-hire/applicant.do",
+    ApllicantList:"/prx/api/manage-hire/applicantList.do",
+    ApplicantStatusUpdate:"/prx/api/manage-hire/statusUpdate.do"
+
+
+}
+
+
+export const  Withdraw={
+
+    WithdrawConfirm:"/prx/api/mypage/deleteUser.do"
+
+}
+
 export const Resume = {
   ReadResumeList: "/prx/api/apply/resumeList.do",
   CopyResumeOne: "/prx/api/apply/resumeCopy.do",

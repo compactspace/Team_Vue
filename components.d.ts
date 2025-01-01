@@ -51,5 +51,6 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SkinImage: typeof import('./src/components/layout/AddOnPack/SkinImage.vue')['default']
     SnowAni: typeof import('./src/components/layout/AddOnPack/SnowAni.vue')['default']
+    WithdrawDetail: typeof import('./src/components/page/WithdrawDetail/WithdrawDetail.vue')['default']
   }
 }
