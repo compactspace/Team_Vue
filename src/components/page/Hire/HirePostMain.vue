@@ -1,8 +1,16 @@
 <template>
   <div class="divPostList">
-    현재 페이지: {{ cPage }} 총 개수: {{ hirePostList?.hireCnt }}
-    <div>
-      <button @click="handlerEditor">공고 등록</button>
+    <div class="topBtnArea">
+      <b-button variant="light">
+        총
+        <b-badge pill variant="primary">
+          {{ hirePostList?.hireCnt }}
+        </b-badge>
+        개의 글
+      </b-button>
+      <span style="float: right">
+        <b-button variant="primary" @click="handlerEditor">공고 등록</b-button>
+      </span>
     </div>
     <table>
       <colgroup>
@@ -84,12 +92,12 @@ const handlerEditor = () => {
   });
 };
 
-// const handlerDetail = (idx) => {
-//   router.push({
-//     name: "postDetail",
-//     params: { idx },
-//   });
-// };
+const handlerDetail = (idx) => {
+  router.push({
+    name: "postDetail",
+    params: { idx },
+  });
+};
 
 onMounted(() => {
   searchList();
@@ -125,17 +133,26 @@ table {
   }
 }
 
-button {
-  padding: 6px 12px;
-  margin: 5px;
-  border-radius: 4px;
-  border: none;
-  background-color: #1378e4;
-  color: white;
-  cursor: pointer;
+.topBtnArea {
+  width: 100%;
+  margin-top: 20px;
 }
 
-button:hover {
-  background-color: #003d7e;
+button {
+  min-width: 90px;
 }
+
+// button {
+//   padding: 6px 12px;
+//   margin: 5px;
+//   border-radius: 4px;
+//   border: none;
+//   background-color: #1378e4;
+//   color: white;
+//   cursor: pointer;
+// }
+
+// button:hover {
+//   background-color: #003d7e;
+// }
 </style>

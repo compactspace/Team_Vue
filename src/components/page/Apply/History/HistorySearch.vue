@@ -34,14 +34,14 @@ const searchKeyDefault = {
   viewStatus: "all",
   sortOrder: "desc",
   keyWord: "",
-  currentPage: "1",
+  currentPage: 1,
 };
 const searchKey = ref({ ...searchKeyDefault });
 const injectedHistorySearchValue = inject("providedHistorySearchValue");
 
 const handlerSearchKewordBtn = (whatBtn) => {
   if (whatBtn == "reset") searchKey.value = { ...searchKeyDefault };
-  injectedHistorySearchValue.value = { ...searchKey.value };
+  injectedHistorySearchValue.value = { ...searchKey.value, currentPage: 1 };
 };
 </script>
 

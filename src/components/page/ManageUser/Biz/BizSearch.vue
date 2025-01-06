@@ -1,28 +1,17 @@
 <template>
   <div class="search-box">
     <span>기업명</span>
-    <input v-model.lazy="keyword" />
+    <input v-model.lazy="searchKey.searchName" />
     <button @click="handlerSearch">검색</button>
   </div>
 </template>
 
 <script setup>
-import router from "../../../../router";
-
-const keyword = ref("");
+const injectedValue = inject("providedValue");
+const searchKey = ref({});
 const handlerSearch = () => {
-  const query = [];
-  !keyword.value || query.push(`searchName=${keyword.value}`);
-  const queryString = query.length > 0 ? `?${query.join("&")}` : "";
-
-  console.log(queryString);
-  router.push(queryString);
+  injectedValue.value = { ...searchKey.value };
 };
-
-watchEffect(
-  () => window.location.search && router.push(window.location.pathname),
-  { replace: true }
-);
 </script>
 
 <style lang="scss" scoped>

@@ -33,7 +33,6 @@ export default defineConfig({
       "/serverfile": {
         target: "http://localhost:80",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/serverfile/, "/serverfile"),
       },
     },
   },

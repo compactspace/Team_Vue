@@ -1,7 +1,6 @@
 <template>
   <div class="divHistoryList">
-    현재 페이지: {{ currentPage }} 총 개수:
-    {{ historyList?.result?.length || 0 }}
+    현재 페이지: {{ currentPage }} 총 개수: {{ historyList?.historyCnt || 0 }}
     <table>
       <colgroup>
         <col width="15%" />
@@ -27,39 +26,40 @@
               <td>
                 {{ history.applyDate }}
               </td>
-              <td
-                style="
-                  display: flex;
-                  flex-direction: column;
-                  align-items: flex-start;
-                  font-size: 0.9vw;
-                "
-              >
-                <div>
-                  기업명:
-                  <a
-                    :href="`/vue/company/companyDetailPage.do/${history.postingId}/${history.bizIdx}`"
-                    >{{ history.bizName }}</a
-                  >
-                </div>
-                <div>
-                  공고명:
-                  <a
-                    :href="`/vue/manage-post/${history.postingId}/${history.bizIdx}`"
-                    >{{ history.postTitle }}</a
-                  >
-                </div>
-                <div>
-                  이력서:
-                  <span
-                    @click="
-                      {
-                        modalStore.modalState = true;
-                        resIdx = history.resIdx;
-                      }
-                    "
-                    >{{ history.resTitle }}</span
-                  >
+              <td>
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    font-size: 0.9vw;
+                  "
+                >
+                  <div>
+                    기업명:
+                    <a
+                      :href="`/vue/company/companyDetail.do/${history.bizIdx}`"
+                      >{{ history.bizName }}</a
+                    >
+                  </div>
+                  <div>
+                    공고명:
+                    <a :href="`/vue/jobs/posts.do/${history.postingId}`">{{
+                      history.postTitle
+                    }}</a>
+                  </div>
+                  <div>
+                    이력서:
+                    <span
+                      @click="
+                        {
+                          modalStore.modalState = true;
+                          resIdx = history.resIdx;
+                        }
+                      "
+                      >{{ history.resTitle }}</span
+                    >
+                  </div>
                 </div>
               </td>
               <td>
@@ -75,7 +75,9 @@
                   :style="
                     history.viewed == '1' ? { backgroundColor: 'gray' } : {}
                   "
-                  >지원취소</CommonButton
+                  >{{
+                    history.viewed == "1" ? "이미열람" : "지원취소"
+                  }}</CommonButton
                 >
               </td>
             </tr>
@@ -89,30 +91,32 @@
         <template v-if="isError">...에러</template>
       </tbody>
     </table>
-
-    <!-- 페이지네이션 -->
-    <Pagination
-      :totalItems="historyList?.result?.length || 0"
-      :items-per-page="itemPerPage"
-      :max-pages-shown="5"
-      :onClick="queryClient.invalidateQueries({ queryKey: ['historyList'] })"
-      v-model="currentPage"
-    />
   </div>
 
+  <!-- 페이지네이션 -->
+  <Pagination
+    :totalItems="historyList?.historyCnt || 0"
+    :items-per-page="itemPerPage"
+    :max-pages-shown="5"
+    :onClick="queryClient.invalidateQueries({ queryKey: ['historyList'] })"
+    v-model="currentPage"
+  />
+
   <!-- 모달 -->
-  <ResumeFrame :resIdx="resIdx" v-if="modalStore.modalState" />
+  <CommonModalFrame>
+    <ResumeDetail :resIdx="resIdx" />
+  </CommonModalFrame>
 </template>
 
 <script setup>
+import { useModalStore } from "@/stores/modalState";
+import { useQueryClient } from "@tanstack/vue-query";
 import { useHistoryListReadQuery } from "../../../../hook/apply/history/useHistoryListReadQuery";
 import { useHistoryOneCancleMutation } from "../../../../hook/apply/history/useHistoryOneCancleMutation";
 import Pagination from "../../../common/Pagination.vue";
-import { useQueryClient } from "@tanstack/vue-query";
-import { useModalStore } from "@/stores/modalState";
 
 const injectedHistorySearchValue = inject("providedHistorySearchValue");
-const itemPerPage = ref(24);
+const itemPerPage = ref(5);
 const currentPage = ref(1);
 const queryClient = useQueryClient();
 const resIdx = ref(0);
@@ -131,6 +135,10 @@ const {
   injectedHistorySearchValue
 );
 const { mutate: handlerCancleHistoryBtn } = useHistoryOneCancleMutation();
+
+watch(injectedHistorySearchValue, () => {
+  currentPage.value = injectedHistorySearchValue.value.currentPage;
+});
 </script>
 
 <style lang="scss" scoped>

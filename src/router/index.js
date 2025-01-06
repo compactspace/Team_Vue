@@ -1,25 +1,35 @@
 import { createRouter, createWebHistory } from "vue-router";
-import ResumeFrame from "../components/page/Apply/Resume/ResumeFrame.vue";
+import ResumeDetail from "../components/page/Apply/Resume/ResumeDetail.vue";
 import NoticeDetail from "../components/page/Board/Notice/NoticeDetail.vue";
 import CompanyDetail from "../components/page/Company/CompanyDetail.vue";
 import HirePostEditor from "../components/page/Hire/HirePostEditor.vue";
+import PostDetail from "../components/page/Jobs/Post/PostDetail.vue";
 import QnaDetailModal from "../components/page/Qna/QnaDetailModal.vue";
+import History from "../views/Apply/History/History.vue";
+import Resume from "../views/Apply/Resume/Resume.vue";
 import ApprovalPost from "../views/Approval/ApprovalPost.vue";
+import ConfirmedPost from "../views/Approval/ConfirmedPost.vue";
 import Notice from "../views/Board/Notice.vue";
 import DashBoard from "../views/DashBoard/DashBoard.vue";
 import HirePost from "../views/Hire/HirePost.vue";
 import Post from "../views/Jobs/Post.vue";
+import Scrap from "../views/Jobs/Scrap.vue";
 import Login from "../views/Login/Login.vue";
 import ManageApplicant from "../views/ManageUser/ManageApplicant.vue";
 import ManageBiz from "../views/ManageUser/ManageBiz.vue";
 import Qna from "../views/Qna/QuesnAnsw.vue";
-import Resume from "../views/Apply/Resume/Resume.vue";
-import History from "../views/Apply/History/History.vue";
+import Applicant from "../views/Applicant/Applicant.vue";
+import ApplicantViewMain from "../views/Applicant/ApplicantViewMain.vue"
 
+<<<<<<< HEAD
 import Applicant from "../views/Applicant/Applicant.vue";
 import Withdraw from "../views/Withdraw/Withdraw.vue";
 import path from "path";
 
+=======
+import ApplicantResume from "../components/page/Applicant/ApplicantResume.vue";
+import Withdraw from "../views/Withdraw/Withdraw.vue";
+>>>>>>> feat/#51
 const routes = [
   {
     path: "/",
@@ -76,7 +86,7 @@ const routes = [
           {
             path: "resume-detail.do",
             name: "resumeDetail",
-            component: ResumeFrame,
+            component: ResumeDetail,
           },
           {
             path: "history.do",
@@ -95,6 +105,16 @@ const routes = [
             name: "post",
             component: Post,
           },
+          {
+            path: "posts.do/:idx",
+            name: "postDetail",
+            component: PostDetail,
+          },
+          {
+            path: "scrap.do",
+            name: "scrap",
+            component: Scrap,
+          },
         ],
       },
       {
@@ -106,6 +126,7 @@ const routes = [
             name: "hire-post",
             component: HirePost,
           },
+
           {
             path: "editor.do",
             name: "hire-post-create",
@@ -119,6 +140,33 @@ const routes = [
           }
 
 
+
+        //   {
+        //     path:'applicant.do',
+        //     name:"volunteer",
+        //     component: Applicant,
+        //   }
+
+          { path:'applicant.do',
+            name:"volunteer",
+            component: ApplicantViewMain
+          }
+
+
+          ,
+          {
+            path:'applicantresume.do?:resIdx',
+            name:"volunteerresume",
+            component: ApplicantResume,
+          }
+,
+
+          {
+            path: "editor.do/:idx",
+            name: "hire-post-update",
+            component: HirePostEditor,
+          },
+
         ],
       },
       {
@@ -129,6 +177,11 @@ const routes = [
             path: "approval.do",
             name: "approval-post",
             component: ApprovalPost,
+          },
+          {
+            path: "post.do",
+            name: "post",
+            component: ConfirmedPost,
           },
         ],
       },
@@ -160,7 +213,6 @@ const routes = [
         ],
       },
 
-
       {
         path:'mypage',
         name:"mypage",
@@ -174,13 +226,10 @@ const routes = [
                 
                 }
         ]
-
-
       }
 
 
 
-      
     ],
   },
 ];

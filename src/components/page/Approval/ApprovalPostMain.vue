@@ -1,6 +1,12 @@
 <template>
   <div class="divPostList">
-    현재 페이지: {{ cPage }} 총 개수: {{ approvalList?.pendingPostCnt }}
+    <b-button variant="light">
+      총
+      <b-badge pill variant="primary">
+        {{ approvalList?.pendingPostCnt }}
+      </b-badge>
+      개의 글
+    </b-button>
     <table>
       <colgroup>
         <col width="10%" />
@@ -61,6 +67,7 @@
 <script setup>
 import { ref } from "vue";
 import { useApprovalListSearchQuery } from "../../../hook/approval/useApprovalListSearchQuery";
+import router from "../../../router";
 import Pagination from "../../common/Pagination.vue";
 
 const cPage = ref(1);
@@ -72,6 +79,13 @@ const {
   isSuccess,
   isError,
 } = useApprovalListSearchQuery(injectedValue, cPage);
+
+const handlerDetail = (idx) => {
+  router.push({
+    name: "postDetail",
+    params: { idx },
+  });
+};
 </script>
 
 <style lang="scss" scoped>

@@ -1,22 +1,27 @@
 <template>
-  <div class="container">
+  <div class="align-center">
     <div
       class="wrapper"
-      style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px"
+      :style="{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2, 75px)',
+        gap: '10px',
+        width: width + 'px',
+      }"
     >
-      <div v-for="(item, key) in items" :key="key">
+      <template v-for="(item, key) in items" :key="key">
         <CommonOnOff
           :isActive="item.isActive"
           @changeActive="item.onChangeActive()"
           >{{ item.name }}</CommonOnOff
         >
-      </div>
+      </template>
     </div>
     <div style="position: relative">
       <SnowAni v-if="items.snow.isActive" :snowConfig="snowConfig" />
       <SkinImage v-if="items.skin.isActive" :url="skinUrl" />
     </div>
-    <div>
+    <div class="align-center">
       <MusicBox
         v-if="items.music.isActive"
         :url="musicUrl"
@@ -118,27 +123,27 @@ watch(
 </script>
 
 <style scoped>
-.container {
+.align-center {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  text-align: center;
-  margin: 20px;
-  font-family: "Arial", sans-serif;
+  align-items: center;
 }
 
 .wrapper {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  position: relative;
+  margin-top: 20px;
+  padding: 5px;
+  max-width: 100%;
   background-color: #f4f0e1;
   border: 5px solid gold;
   border-radius: 15px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
-  margin-top: 20px;
-  position: relative;
+  text-align: center;
+  font-family: "Arial", sans-serif;
 }
 </style>

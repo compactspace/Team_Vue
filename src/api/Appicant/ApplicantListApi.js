@@ -1,15 +1,22 @@
+
 import axios from "axios";
 import { Applicant } from "../api";
 
-export const ApplicantListApi = async (loginId,statusMesaage)=>{
+export const ApplicantListApi = async (loginId,statusMesaage, postidx)=>{
 
-    console.log(`loginId:  ${loginId}  statusMesaage:${statusMesaage}`)
+    let newObj=new Object()
+    console.log(`loginId:  ${loginId}  statusMesaage:${statusMesaage.value}   postIdx:${ postidx.value}`)
     
-    let res1= await axios.post(Applicant.ApplicantManagerGetId,{loginId:loginId});
+    let postIdx=postidx.value;
+    if(postidx.value==null){
+        let res1= await axios.post(Applicant.ApplicantManagerGetId,{loginId:loginId});   
+        postIdx =res1.data.MDetail[0].postIdx
+        newObj.MDetail=res1.data.MDetail;
+    }  
     
-    console.log(res1.data.MDetail[0].postIdx)
-    
-    let postIdx =res1.data.MDetail[0].postIdx
+    if(statusMesaage?.value && statusMesaage.value.indexOf("불합격")!=-1 ){
+        statusMesaage.value="탈락";
+    }
     
     let bodyData={
      postIdx:postIdx.toString(),
@@ -17,11 +24,17 @@ export const ApplicantListApi = async (loginId,statusMesaage)=>{
      firstProc:"",
      currentPage:"1" ,
      pageSize:"5",
-     keyword:"서류심사중",
+     keyword:statusMesaage?.value||"서류심사중",
     }
 
 
- let res2= await axios.post(Applicant.ApllicantList, bodyData);
+console.log(bodyData)
 
-return res2.data;
+ let res2= await axios.post(Applicant.ApllicantList, bodyData);
+    
+console.log(res2.data)
+
+newObj.ApplicantList=res2.data;
+return newObj;
+//return res2.data;
 }

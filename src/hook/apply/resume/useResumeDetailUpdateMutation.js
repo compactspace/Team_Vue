@@ -1,13 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/vue-query";
 import { resumeDetailUpdateApi } from "../../../api/apply/resume/resumeDetailUpdateApi";
 
-export const useResumeDetailUpdateMutation = (fileData) => {
+export const useResumeDetailUpdateMutation = (resIdx, resume, fileData) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ["resumeUpdate"],
-    mutationFn: ({ resIdx, resume }) =>
-      resumeDetailUpdateApi(resIdx, resume, fileData),
+    mutationFn: () => resumeDetailUpdateApi(resIdx, resume, fileData),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["resumeList"],

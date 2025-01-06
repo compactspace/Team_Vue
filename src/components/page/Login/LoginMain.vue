@@ -29,17 +29,31 @@
             <label> 비밀번호 </label>
             <input required type="password" v-model="loginInfo.pwd" />
           </div>
-          <div class="joinDiv">
-            <strong class="strong">[일반회원가입]</strong>
-            <strong class="strong">[기업회원가입]</strong>
-          </div>
           <div>
             <button class="login-button" @click="handlerLogin">Login</button>
           </div>
         </div>
+        <div class="joinDiv">
+          <strong class="strong joinDivBtn" @click="findIdModalOpen"
+            >아이디 찾기</strong
+          >
+          <span class="strong joinDivBtn noHoverCursor">|</span>
+          <strong class="strong joinDivBtn" @click="findPwdModalOpen"
+            >비밀번호 찾기</strong
+          >
+          <span class="strong joinDivBtn noHoverCursor">|</span>
+          <strong class="strong joinDivBtn" @click="signUpModalOpen"
+            >회원가입</strong
+          >
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- 모달 -->
+  <FindIdModal v-if="modalStore.modalState && modalType === 'findIdModal'" />
+  <FindPwdModal v-if="modalStore.modalState && modalType === 'findPwdModal'" />
+  <SignUpModal v-if="modalStore.modalState && modalType === 'signUpModal'" />
 </template>
 
 <script setup>
@@ -48,25 +62,60 @@ import logo from "../../../assets/logo.png";
 import { nullCheck } from "../../../common/nullCheck";
 import { useUserInfo } from "../../../stores/userInfo";
 
+import { handlerEnterKey } from "@/common/handler/handlerEnterKey";
+import { handlerEscKey } from "@/common/handler/handlerEscKey";
+import { toast } from "@/common/toastMessage";
+import { useModalStore } from "@/stores/modalState";
+import FindIdModal from "./FindIdModal.vue";
+import FindPwdModal from "./FindPwdModal.vue";
+import SignUpModal from "./SignUpModal.vue";
+
 const loginInfo = ref({});
 const userInfo = useUserInfo();
 const router = useRouter();
+const modalStore = useModalStore();
+const modalType = ref("");
 
 const handlerLogin = async () => {
   const isNull = nullCheck([
-    { inval: loginInfo.value.lgn_Id, msg: "id 입력 좀" },
+    { inval: loginInfo.value.lgn_Id, msg: "아이디 입력 좀" },
     { inval: loginInfo.value.pwd, msg: "비밀번호 입력 좀" },
   ]);
-  if (!isNull) return;
+  if (!isNull) {
+    return;
+  }
   const param = new URLSearchParams(loginInfo.value);
   const result = await userInfo.setUserData(param);
   if (result === "SUCCESS") {
     router.push("/vue");
   } else {
-    alert("아이디 혹은 비밀번호가 일치하지 않아요");
+    toast.error("아이디 또는 비밀번호가 \n일치하지 않습니다.");
     return;
   }
 };
+// 모달 열기
+const openModal = (type) => {
+  modalStore.modalState = true;
+  modalType.value = type;
+};
+// 아이디 찾기 모달
+const findIdModalOpen = () => openModal("findIdModal");
+// 비밀번호 찾기 모달
+const findPwdModalOpen = () => openModal("findPwdModal");
+// 회원가입 모달
+const signUpModalOpen = () => openModal("signUpModal");
+
+// Enter키로 로그인하기(모달창 띄우졌을때는 안되게 함)
+handlerEnterKey(() => {
+  if (!modalStore.modalState) {
+    handlerLogin();
+  }
+});
+
+// ESC키로 모달창 닫기
+handlerEscKey(() => {
+  modalStore.modatState.value = false;
+});
 </script>
 
 <style scoped>
@@ -100,7 +149,8 @@ const handlerLogin = async () => {
 }
 
 .buttons {
-  padding: 20px;
+  padding-top: 20px;
+  padding-bottom: 10px;
   justify-content: center;
   align-items: center;
   display: grid;
@@ -137,6 +187,7 @@ button {
   color: #ffffff;
 }
 .login-button {
+  width: 100%;
   background-color: #2676bf;
   color: #ffffff;
 }
@@ -150,12 +201,26 @@ button:hover {
   opacity: 0.9;
 }
 .joinDiv {
-  font-size: small;
+  font-size: 20px;
+  padding-bottom: 20px;
 }
 .findDiv {
   font-size: small;
 }
 .strong {
   cursor: pointer;
+}
+
+.joinDivBtn {
+  color: gray;
+  margin: 0 10px;
+}
+.joinDivBtn:hover {
+  color: black;
+  transition: color 0.3s ease;
+  text-decoration: underline;
+}
+.noHoverCursor {
+  cursor: default;
 }
 </style>

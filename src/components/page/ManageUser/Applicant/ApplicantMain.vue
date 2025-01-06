@@ -2,7 +2,7 @@
   <div class="form-container">
     <ApplicantModal
       v-if="modalState.modalState"
-      @postSuccess="searchList"
+      @postSuccess="refetch"
       @modalClose="() => (userLoginId = '')"
       :loginId="userLoginId"
     />
@@ -58,48 +58,32 @@
       :totalItems="applicantList?.applicantCnt || 0"
       :items-per-page="5"
       :max-pages-shown="5"
-      :onClick="searchList"
       v-model="cPage"
     />
   </div>
 </template>
 
 <script setup>
-import axios from "axios";
-import { onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useApplicantListSearchQuery } from "../../../../hook/manageUser/useApplicantListSearchQuery";
 import { useModalStore } from "../../../../stores/modalState";
 
-const route = useRoute();
-const applicantList = ref();
 const cPage = ref(1);
 const modalState = useModalStore();
 const userLoginId = ref("");
+const injectedValue = inject("providedValue");
 
-const searchList = async () => {
-  const requestBody = {
-    searchName: route.query.searchName || "",
-    currentPage: cPage.value,
-    pageSize: 5,
-  };
-
-  await axios
-    .post("/prx/api/manage-user/applicantListBody.do", requestBody)
-    .then((res) => {
-      applicantList.value = res.data;
-    });
-};
+const {
+  data: applicantList,
+  isLoading,
+  refetch,
+  isSuccess,
+  isError,
+} = useApplicantListSearchQuery(injectedValue, cPage);
 
 const handlerUpdateModal = (loginId) => {
   userLoginId.value = loginId;
   modalState.setModalState();
 };
-
-watch(route, searchList);
-
-onMounted(() => {
-  searchList();
-});
 </script>
 
 <style lang="scss" scoped>

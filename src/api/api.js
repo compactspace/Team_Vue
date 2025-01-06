@@ -9,6 +9,23 @@ export const Notice = {
 
 export const Post = {
   SearchPostList: "/prx/api/jobs/readPostList.do",
+  SearchPostDetail: "/prx/api/jobs/readPostDetailBody.do",
+  DeletePostDetail: "/prx/api/manage-hire/deleteHirePost.do",
+};
+
+export const  Withdraw={
+
+    WithdrawConfirm:"/prx/api/mypage/deleteUser.do"
+
+};
+
+
+
+
+export const Scrap = {
+  SearchScrapList: "/prx/api/jobs/readScrapList.do",
+  UpdateScrap: "/prx/api/jobs/saveScrap.do",
+  DeleteScrap: "/prx/api/jobs/deleteScrap.do",
 };
 
 
@@ -63,4 +80,32 @@ export const History = {
 
 export const Approval = {
   SearchApprovalList: "/prx/api/manage-post/readPostList.do",
+};
+
+export const Login = {
+  SignUpIdCheck: "/prx/api/check_loginId.do",
+  SignUp: "/prx/api/register.do",
+  FindId: "/prx/api/selectFindInfoId.do",
+  FindPwd: "/prx/api/selectFindInfoPw.do",
+  FindPwdUpdate: "/prx/api/updateFindPw.do",
+};
+
+export const Applicant = {
+  SearchApplicantList: "/prx/api/manage-user/applicantListBody.do",
+  SearchApplicantDetail: "/prx/api/manage-user/applicantManageDetail.do",
+  ResetApplicantPw: "/prx/api/manage-user/applicantPwReset.do",
+  UpdateApplicantDetail: "/prx/api/manage-user/applicantInfoUpdate.do",
+  ApplicantManagerGetId:"/prx/api/manage-hire/applicant.do",
+  ApllicantList:"/prx/api/manage-hire/applicantList.do",
+  ApplicantStatusUpdate:"/prx/api/manage-hire/statusUpdate.do",
+  ApplicantResumeIndependent:"prx/api/apply/resumeDetail",
+  ApplicantcareerListIndependent:"/prx/api/apply/careerList",
+  ApplicantEducationListtIndependent:"/prx/api/apply/educationListt",
+  ApplicantskillListIndependent:"/prx/api/apply/skillList",
+};
+
+export const Biz = {
+  SearchBizList: "/prx/api/manage-user/bizList.do",
+  SearchBizDetail: "/prx/api/manage-user/bizManageDetail.do",
+  UpdateBizDetail: "/prx/api/manage-user/bizInfoUpdate.do",
 };

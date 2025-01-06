@@ -1,5 +1,5 @@
-import { useUserInfo } from "../../../stores/userInfo";
 import axios from "axios";
+import { useUserInfo } from "../../../stores/userInfo";
 import { History } from "../../api";
 
 export const historyListReadApi = async (
@@ -10,12 +10,12 @@ export const historyListReadApi = async (
   const userInfo = useUserInfo();
 
   const param = {
+    ...injectedHistorySearchValue.value,
     loginId: userInfo.user.loginId,
     userNm: userInfo.user.userNm,
     userType: userInfo.user.userType,
     currentPage: currentPage.value.toString(),
     pageSize: itemPerPage.value.toString(),
-    ...injectedHistorySearchValue.value,
   };
 
   const result = await axios.post(History.ReadHistoryList, param);

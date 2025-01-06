@@ -2,7 +2,7 @@
   <div class="form-container">
     <BizModal
       v-if="modalState.modalState"
-      @postSuccess="searchList"
+      @postSuccess="refetch"
       @modalClose="() => (bizIdx = 0)"
       :idx="bizIdx"
     />
@@ -55,48 +55,34 @@
       :totalItems="bizList?.bizCnt || 0"
       :items-per-page="5"
       :max-pages-shown="5"
-      :onClick="searchList"
       v-model="cPage"
     />
   </div>
 </template>
 
 <script setup>
-import axios from "axios";
-import { onMounted } from "vue";
 import { useRoute } from "vue-router";
+import { useBizListSearchQuery } from "../../../../hook/manageUser/useBizListSearchQuery";
 import { useModalStore } from "../../../../stores/modalState";
 
 const route = useRoute();
-const bizList = ref();
 const cPage = ref(1);
 const modalState = useModalStore();
 const bizIdx = ref("");
+const injectedValue = inject("providedValue");
 
-const searchList = async () => {
-  const requestBody = {
-    searchName: route.query.searchName || "",
-    currentPage: cPage.value,
-    pageSize: 5,
-  };
-
-  await axios
-    .post("/prx/api/manage-user/bizList.do", requestBody)
-    .then((res) => {
-      bizList.value = res.data;
-    });
-};
+const {
+  data: bizList,
+  isLoading,
+  refetch,
+  isSuccess,
+  isError,
+} = useBizListSearchQuery(injectedValue, cPage);
 
 const handlerUpdateModal = (idx) => {
   bizIdx.value = idx;
   modalState.setModalState();
 };
-
-watch(route, searchList);
-
-onMounted(() => {
-  searchList();
-});
 </script>
 
 <style lang="scss" scoped>

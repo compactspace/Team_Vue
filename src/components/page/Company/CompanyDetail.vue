@@ -68,7 +68,7 @@ const bizDetail = ref({ logicalPath: "" });
 
 const searchDetail = async () => {
   await axios
-    .post("/prx/api//company/companyDetailPage.do", { bizIdx: params.idx })
+    .post("/prx/api//company/companyDetailPage.do", { bizIdx: params.bizIdx })
     // .post("/prx/api//company/companyDetailPage.do", { bizIdx: 3 })
     .then((res) => {
       bizDetail.value = res.data.payload;

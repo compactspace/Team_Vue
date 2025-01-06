@@ -4,4 +4,10 @@
   <BizMain />
 </template>
 
-<script setup></script>
+<script setup>
+import { provide } from "vue";
+
+const providedValue = ref();
+
+provide("providedValue", providedValue);
+</script>

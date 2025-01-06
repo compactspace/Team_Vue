@@ -8,9 +8,13 @@ export const useUserInfo = defineStore(
     const user = ref();
     async function setUserData(loginInfo) {
       const param = new URLSearchParams(loginInfo);
-      const result = await axios.post("/prx/loginProc.do", param);
-      user.value = result.data;
-      return result.data.result;
+      const resultPlain = await axios.post("/prx/loginProc.do", param); // 평문
+      const resultBcrypt = await axios.post("/prx/api/loginProc.do", param); // 암호
+      user.value =
+        resultPlain.data.result === "SUCCESS"
+          ? resultPlain.data
+          : resultBcrypt.data;
+      return user.value.result;
     }
 
     return { user, setUserData };

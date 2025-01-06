@@ -20,7 +20,7 @@
                   disabled
                   type="text"
                   class="input-text"
-                  v-model="bizDetail.bizIdx"
+                  v-model="detailValue.bizIdx"
                 />
               </td>
             </tr>
@@ -30,7 +30,7 @@
                 <input
                   type="text"
                   class="input-text"
-                  v-model="bizDetail.bizName"
+                  v-model="detailValue.bizName"
                 />
               </td>
             </tr>
@@ -40,7 +40,7 @@
                 <input
                   type="text"
                   class="input-text"
-                  v-model="bizDetail.bizCeoName"
+                  v-model="detailValue.bizCeoName"
                 />
               </td>
             </tr>
@@ -50,7 +50,7 @@
                 <input
                   type="text"
                   class="input-text"
-                  v-model="bizDetail.bizEmpCount"
+                  v-model="detailValue.bizEmpCount"
                 />
               </td>
             </tr>
@@ -60,7 +60,7 @@
                 <input
                   type="text"
                   class="input-text"
-                  v-model="bizDetail.bizRevenue"
+                  v-model="detailValue.bizRevenue"
                 />
               </td>
             </tr>
@@ -70,7 +70,7 @@
                 <input
                   type="text"
                   class="input-text"
-                  v-model="bizDetail.bizContact"
+                  v-model="detailValue.bizContact"
                 />
               </td>
             </tr>
@@ -80,7 +80,7 @@
                 <input
                   type="text"
                   class="input-text"
-                  v-model="bizDetail.bizAddr"
+                  v-model="detailValue.bizAddr"
                 />
               </td>
             </tr>
@@ -90,7 +90,7 @@
                 <input
                   type="url"
                   class="input-text"
-                  v-model="bizDetail.bizWebUrl"
+                  v-model="detailValue.bizWebUrl"
                 />
               </td>
             </tr>
@@ -100,7 +100,7 @@
                 <input
                   type="date"
                   class="input-text"
-                  v-model="bizDetail.bizFoundDate"
+                  v-model="detailValue.bizFoundDate"
                 />
               </td>
             </tr>
@@ -111,7 +111,7 @@
                   type="text"
                   id="biz-intro"
                   class="input-text"
-                  v-model="bizDetail.bizIntro"
+                  v-model="detailValue.bizIntro"
                   rows="1"
                 />
               </td>
@@ -128,47 +128,36 @@
 </template>
 
 <script setup>
-import axios from "axios";
+import { useBizDetailSearchQuery } from "../../../../hook/manageUser/useBizDetailSearchQuery";
+import { useBizDetailUpdateMutation } from "../../../../hook/manageUser/useBizDetailUpdateMutation";
 import { useModalStore } from "../../../../stores/modalState";
 
 const emit = defineEmits(["postSuccess", "modalClose"]);
 const props = defineProps(["idx"]);
-
+const detailValue = ref({});
 const modalState = useModalStore();
-const bizDetail = ref({});
 
-const searchDetail = async () => {
-  await axios
-    .post("/prx/api/manage-user/bizManageDetail.do", {
-      bizIdx: props.idx,
-    })
-    .then((res) => {
-      bizDetail.value = res.data.detail;
-    });
-};
+const {
+  data: bizDetail,
+  isLoading,
+  isSuccess,
+} = useBizDetailSearchQuery(props);
 
-const handlerUpdate = () => {
-  const requestBody = {
-    ...bizDetail.value,
-    bizIdx: props.idx,
-  };
-  axios
-    .post("/prx/api/manage-user/bizInfoUpdate.do", requestBody)
-    .then((res) => {
-      if (res.data.result == "success") {
-        alert("수정이 완료되었습니다.");
-      } else {
-        alert("다시 시도해주세요.");
-      }
-    });
-};
+watchEffect(() => {
+  if (isSuccess.value && bizDetail.value) {
+    detailValue.value = toRaw(bizDetail.value.detail);
+  }
+});
+
+const { mutate: handlerUpdate } = useBizDetailUpdateMutation(
+  detailValue.value,
+  props.idx,
+  modalState
+);
 
 const handlerModal = () => {
   modalState.setModalState();
 };
-onMounted(() => {
-  searchDetail();
-});
 
 onUnmounted(() => {
   emit("modalClose");

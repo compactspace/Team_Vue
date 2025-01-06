@@ -7,7 +7,12 @@ export const useHistoryListReadQuery = (
   injectedHistorySearchValue
 ) => {
   return useQuery({
-    queryKey: ["historyList", currentPage, injectedHistorySearchValue],
+    queryKey: [
+      "historyList",
+      itemPerPage,
+      currentPage,
+      injectedHistorySearchValue,
+    ],
     queryFn: () =>
       historyListReadApi(itemPerPage, currentPage, injectedHistorySearchValue),
   });

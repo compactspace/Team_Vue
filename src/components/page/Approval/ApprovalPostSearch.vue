@@ -1,9 +1,27 @@
 <template>
-  <div class="search-box">
-    <input v-model="searchKey.searchTitle" />
-    <input type="date" v-model="searchKey.searchStartDate" />
-    <input type="date" v-model="searchKey.searchEndDate" />
-    <button @click="handlerSearch">검1색</button>
+  <div class="search-container">
+    <div class="search-box">
+      <span class="search-input">
+        <b-form-input
+          v-model="searchKey.searchTitle"
+          v-on:keyup.enter="handlerSearch"
+          size="sm"
+        />
+      </span>
+      <span class="search-input calendar">
+        <b-form-input
+          type="date"
+          size="sm"
+          v-model="searchKey.searchStartDate"
+        />
+      </span>
+      <span class="search-input calendar">
+        <b-form-input type="date" size="sm" v-model="searchKey.searchEndDate" />
+      </span>
+      <span class="search-input">
+        <b-button variant="primary" @click="handlerSearch">검색</b-button>
+      </span>
+    </div>
   </div>
 </template>
 
@@ -17,45 +35,33 @@ const handlerSearch = () => {
 </script>
 
 <style lang="scss" scoped>
+.search-container {
+  width: 100%;
+  height: 20px;
+}
 .search-box {
-  margin-bottom: 10px;
+  text-align: right;
+  margin: 10px 0px;
   display: block;
   float: inline-end;
 }
-
+.search-input {
+  float: left;
+  margin: 0px 3px;
+}
+.calendar {
+  width: 120px;
+}
 input {
   padding: 8px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  margin-right: 5px;
   border-radius: 4px;
   border: 1px solid #ccc;
 }
-
+input:hover {
+  background-color: #ffffff;
+}
 button {
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  border: none;
-  color: white;
+  margin: 0px 3px;
   width: 70px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  font-size: 12px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 12px;
-  box-shadow: 0 4px #999;
-  background-color: #3bb2ea;
-
-  &:hover {
-    background-color: #45a049;
-  }
-
-  &:active {
-    background-color: #3e8e41;
-    box-shadow: 0 2px #666;
-    transform: translateY(2px);
-  }
 }
 </style>

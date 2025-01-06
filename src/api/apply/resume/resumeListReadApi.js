@@ -1,5 +1,5 @@
-import { useUserInfo } from "../../../stores/userInfo";
 import axios from "axios";
+import { useUserInfo } from "../../../stores/userInfo";
 import { Resume } from "../../api";
 
 export const resumeListReadApi = async (itemPerPage, currentPage) => {

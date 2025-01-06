@@ -16,7 +16,7 @@
             <tr>
               <th>유저타입</th>
               <td colspan="3">
-                <select v-model="applicantDetail.userType">
+                <select v-model="detailValue.userType">
                   <option selected disabled>선택</option>
                   <option value="A">개인회원</option>
                   <option value="B">기업회원</option>
@@ -30,7 +30,7 @@
                 <input
                   type="text"
                   class="input-text"
-                  v-model="applicantDetail.loginId"
+                  v-model="detailValue.loginId"
                 />
               </td>
             </tr>
@@ -46,14 +46,14 @@
                 <input
                   type="text"
                   class="input-text"
-                  v-model="applicantDetail.name"
+                  v-model="detailValue.name"
                 />
               </td>
             </tr>
             <tr>
               <th>성별</th>
               <td colspan="3">
-                <select v-model="applicantDetail.sex">
+                <select v-model="detailValue.sex">
                   <option selected disabled>선택</option>
                   <option value="1">남자</option>
                   <option value="2">여자</option>
@@ -66,14 +66,14 @@
                 <input
                   type="date"
                   id="birthday"
-                  v-model="applicantDetail.birthday"
+                  v-model="detailValue.birthday"
                 />
               </td>
             </tr>
             <tr>
               <th>전화번호</th>
               <td colspan="3">
-                <input type="text" id="phone" v-model="applicantDetail.phone" />
+                <input type="text" id="phone" v-model="detailValue.phone" />
               </td>
             </tr>
             <tr>
@@ -83,14 +83,14 @@
                   disabled
                   type="date"
                   id="birthday"
-                  v-model="applicantDetail.birthday"
+                  v-model="detailValue.birthday"
                 />
               </td>
             </tr>
             <tr>
               <th>활성화</th>
               <td colspan="3">
-                <select v-model="applicantDetail.statusYn">
+                <select v-model="detailValue.statusYn">
                   <option selected disabled>선택</option>
                   <option value="1">활성</option>
                   <option value="2">비활성</option>
@@ -103,18 +103,14 @@
                 <input
                   type="text"
                   id="zip-code"
-                  v-model="applicantDetail.zipCode"
+                  v-model="detailValue.zipCode"
                 />
               </td>
             </tr>
             <tr>
               <th>주소</th>
               <td colspan="3">
-                <input
-                  type="text"
-                  id="address"
-                  v-model="applicantDetail.address"
-                />
+                <input type="text" id="address" v-model="detailValue.address" />
               </td>
             </tr>
             <tr>
@@ -123,7 +119,7 @@
                 <input
                   type="text"
                   id="address"
-                  v-model="applicantDetail.detailAddress"
+                  v-model="detailValue.detailAddress"
                 />
               </td>
             </tr>
@@ -139,62 +135,41 @@
 </template>
 
 <script setup>
-import axios from "axios";
+import { useApplicantDetailSearchQuery } from "../../../../hook/manageUser/useApplicantDetailSearchQuery";
+import { useApplicantDetailUpdateMutation } from "../../../../hook/manageUser/useApplicantDetailUpdateMutation";
+import { useApplicantPwResetMutation } from "../../../../hook/manageUser/useApplicantPwResetMutation";
 import { useModalStore } from "../../../../stores/modalState";
 
 const emit = defineEmits(["postSuccess", "modalClose"]);
 const props = defineProps(["loginId"]);
-
+const detailValue = ref({});
 const modalState = useModalStore();
-const applicantDetail = ref({});
 
-const searchDetail = async () => {
-  await axios
-    .post("/prx/api/manage-user/applicantManageDetail.do", {
-      loginId: props.loginId,
-    })
-    .then((res) => {
-      applicantDetail.value = res.data.detail;
-    });
-};
+const {
+  data: applicantDetail,
+  isLoading,
+  isSuccess,
+} = useApplicantDetailSearchQuery(props);
 
-const handlerPasswordReset = () => {
-  if (confirm("정말 초기화하시겠습니까?")) {
-    axios
-      .post("/prx/api/manage-user/applicantPwReset.do", {
-        loginId: props.loginId,
-      })
-      .then((res) => {
-        alert("비밀번호가 1234 로 초기화되었습니다.");
-        handlerModal();
-      });
-  } else {
-    return false;
+watchEffect(() => {
+  if (isSuccess.value && applicantDetail.value) {
+    detailValue.value = toRaw(applicantDetail.value.detail);
   }
-};
+});
 
-const handlerUpdate = () => {
-  const requestBody = {
-    ...applicantDetail.value,
-    loginId: props.loginId,
-  };
-  axios
-    .post("/prx/api/manage-user/applicantInfoUpdate.do", requestBody)
-    .then((res) => {
-      if (res.data.result == "success") {
-        alert("수정이 완료되었습니다.");
-      } else {
-        alert("다시 시도해주세요.");
-      }
-    });
-};
+const { mutate: handlerPasswordReset } = useApplicantPwResetMutation(
+  props.loginId
+);
+
+const { mutate: handlerUpdate } = useApplicantDetailUpdateMutation(
+  detailValue.value,
+  props.loginId,
+  modalState
+);
 
 const handlerModal = () => {
   modalState.setModalState();
 };
-onMounted(() => {
-  searchDetail();
-});
 
 onUnmounted(() => {
   emit("modalClose");

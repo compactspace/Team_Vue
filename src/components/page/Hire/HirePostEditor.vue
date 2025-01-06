@@ -22,27 +22,27 @@
               <label>
                 <input
                   type="checkbox"
-                  name="expRequired"
                   value="신입"
-                  v-model="postData.expRequired"
+                  :checked="postData.expRequired.includes('신입')"
+                  @change="updateExpRequired('신입', $event)"
                 />
                 신입
               </label>
               <label>
                 <input
                   type="checkbox"
-                  name="expRequired"
                   value="경력"
-                  v-model="postData.expRequired"
+                  :checked="postData.expRequired.includes('경력')"
+                  @change="updateExpRequired('경력', $event)"
                 />
                 경력
               </label>
               <label>
                 <input
                   type="checkbox"
-                  name="expRequired"
                   value="경력무관"
-                  v-model="postData.expRequired"
+                  :checked="postData.expRequired.includes('경력무관')"
+                  @change="updateExpRequired('경력무관', $event)"
                 />
                 경력무관
               </label>
@@ -220,7 +220,9 @@
       >
         {{ !params.idx ? "등록" : "수정" }}
       </button>
-      <button class="btn btn-secondary">돌아가기</button>
+      <button class="btn btn-secondary" @click="$router.go(-1)">
+        돌아가기
+      </button>
     </div>
   </div>
 </template>
@@ -229,10 +231,35 @@
 import axios from "axios";
 import { onMounted } from "vue";
 
+const router = useRouter();
 const { params } = useRoute();
 const postData = ref({ expRequired: [], expYears: "", hirProcess: [] });
 const currentProc = ref("");
 const fileData = ref("");
+
+const updateExpRequired = (value, event) => {
+  const isChecked = event.target.checked;
+
+  // expRequired가 배열인지 확인
+  if (!Array.isArray(postData.value.expRequired)) {
+    postData.value.expRequired =
+      typeof postData.value.expRequired === "string"
+        ? postData.value.expRequired.split(",")
+        : [];
+  }
+
+  if (isChecked) {
+    // 체크된 경우, 배열에 값 추가
+    if (!postData.value.expRequired.includes(value)) {
+      postData.value.expRequired.push(value);
+    }
+  } else {
+    // 체크 해제된 경우, 배열에서 값 제거
+    postData.value.expRequired = postData.value.expRequired.filter(
+      (item) => item !== value
+    );
+  }
+};
 
 const resetHiringProc = () => {
   postData.value.hirProcess = "";
@@ -265,9 +292,10 @@ const hirePostSearchApi = async (params) => {
     .post("/prx/api/manage-hire/post-detail", { postIdx: params.idx })
     .then((res) => {
       postData.value = res.data.payload;
-      postData.value.expRequired = Array.isArray(postData.value.expRequired)
-        ? postData.value.expRequired
-        : [postData.value.expRequired];
+
+      if (typeof postData.value.expRequired === "string") {
+        postData.value.expRequired = postData.value.expRequired.split(",");
+      }
 
       if (!postData.value.hirProcess) {
         postData.value.hirProcess = "";
@@ -275,10 +303,12 @@ const hirePostSearchApi = async (params) => {
     });
 };
 
-const handlerPostCreate = () => {
+const handlerPostCreate = async () => {
   const textData = {
     ...postData.value,
-    expRequired: postData.value.expRequired.join(", "),
+    expRequired: Array.isArray(postData.value.expRequired)
+      ? postData.value.expRequired.join(",")
+      : "",
   };
 
   const formData = new FormData();
@@ -289,13 +319,38 @@ const handlerPostCreate = () => {
       type: "application/json",
     })
   );
-  axios
+  await axios
     .post("/prx/api/manage-hire/post-new", formData)
-    .then((res) => console.log(res))
+    .then(
+      (res) => console.log(res),
+      alert("공고가 등록되었습니다."),
+      router.go(-1)
+    )
     .catch((err) => console.log("err : ", err));
 };
 
-const handlerPostUpdate = () => {};
+const handlerPostUpdate = async () => {
+  const textData = {
+    ...postData.value,
+    expRequired: Array.isArray(postData.value.expRequired)
+      ? postData.value.expRequired.join(",")
+      : "",
+    postIdx: params.idx,
+  };
+
+  const formData = new FormData();
+  fileData.value && formData.append("attachFile", fileData.value);
+  formData.append(
+    "postContent",
+    new Blob([JSON.stringify(textData)], {
+      type: "application/json",
+    })
+  );
+
+  await axios
+    .post("/prx/api/manage-hire/post-update", formData)
+    .then((res) => console.log(res));
+};
 
 const handlerFileUpload = (e) => {
   const fileInfo = e.target.files;
@@ -313,7 +368,9 @@ const autoHeight = (e) => {
   textarea.style.height = `${textarea.scrollHeight}px`;
 };
 
-onMounted(() => params.idx && hirePostSearchApi());
+onMounted(() => {
+  params.idx && hirePostSearchApi(params);
+});
 </script>
 
 <style scoped>

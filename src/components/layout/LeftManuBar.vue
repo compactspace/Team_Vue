@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="align-center">
     <img :src="logo" alt="happyjob" @click="router.push({ name: 'vue' })" />
   </div>
   <div class="logo-box">
@@ -35,14 +35,13 @@
       </div>
     </li>
   </ul>
-  <AddOn />
 </template>
 
 <script setup>
 import logo from "../../assets/logo.png";
 import vue_logo from "../../assets/vue_logo.png";
-import { useUserInfo } from "../../stores/userInfo";
 import { useModalStore } from "../../stores/modalState";
+import { useUserInfo } from "../../stores/userInfo";
 
 const userInfo = useUserInfo();
 const router = useRouter();
@@ -143,8 +142,8 @@ button:active {
 
   .user-info {
     position: relative;
-    right: 120px;
-    top: 30px;
+    right: 150px;
+    top: 10px;
     float: right;
   }
 }
@@ -222,6 +221,39 @@ ul {
     visibility: visible;
     height: 100%;
     margin-top: 30px;
+  }
+}
+
+.align-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .logo-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .user-info {
+      right: 0;
+      top: 0;
+      font-size: clamp(12px, 2vw, 15px);
+
+      button {
+        font-size: clamp(8px, 2vw, 10px);
+      }
+    }
+  }
+
+  .parent-menu {
+    text-align: center;
+  }
+
+  .child-menu-box {
+    text-align: center;
+    padding-right: 20px;
   }
 }
 </style>
