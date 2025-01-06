@@ -8,9 +8,9 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AddOn: typeof import('./src/components/layout/AddOn.vue')['default']
-    ApplicantMain: typeof import('./src/components/page/ManageUser/Applicant/ApplicantMain.vue')['default']
+    ApplicantMain: typeof import('./src/components/page/Applicant/ApplicantMain.vue')['default']
     ApplicantModal: typeof import('./src/components/page/ManageUser/Applicant/ApplicantModal.vue')['default']
-    ApplicantSearch: typeof import('./src/components/page/ManageUser/Applicant/ApplicantSearch.vue')['default']
+    ApplicantSearch: typeof import('./src/components/page/Applicant/ApplicantSearch.vue')['default']
     ApprovalPostMain: typeof import('./src/components/page/Approval/ApprovalPostMain.vue')['default']
     ApprovalPostSearch: typeof import('./src/components/page/Approval/ApprovalPostSearch.vue')['default']
     AsIsQnaDetailModal: typeof import('./src/components/page/Qna/AsIsQnaDetailModal.vue')['default']
