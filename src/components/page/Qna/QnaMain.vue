@@ -20,13 +20,16 @@
         <template v-if="isLoading">로딩중...</template>
         <template v-else-if="isSuccess">
           <template v-if="qnaListData.qnaCnt > 0">
-            <tr v-for="list in qnaListData.qna" @click="showDetailFnc(list.qnaIdx,list.author,list.password)">
+            <tr
+              v-for="list in qnaListData.qna"
+              @click="showDetailFnc(list.qnaIdx, list.author, list.password)"
+            >
               <td>{{ list.qnaIdx }}</td>
-              <td>{{ list.title }}
-                <span class="ans_content" v-if="list.ans_content!=null || list.ans_content!=''">
-                   {{  list.ans_content }}
+              <td>
+                {{ list.title }}
+                <span class="ans_content" v-if="list.ans_content != null || list.ans_content != ''">
+                  {{ list.ans_content }}
                 </span>
-
               </td>
               <td>{{ list.createdDate.substr(0, 10) }}</td>
               <td>{{ list.author }}</td>
@@ -48,8 +51,6 @@
       v-model="cPage"
     />
   </div>
-
-
 </template>
 
 <script setup>
@@ -58,17 +59,14 @@ import { useUserInfo } from "../../../stores/userInfo";
 import { useRouter } from "vue-router";
 import { watch } from "vue";
 
-const router=useRouter();
+const router = useRouter();
 const cPage = ref(1);
 
 const injectedValue = inject("providedQnaValue");
-const userType = inject("providedChangeType")
-const password=ref(null)
+const userType = inject("providedChangeType");
+const password = ref(null);
 
-
-console.log("초기 type: "+userType.value)
-
-
+//console.log("초기 type: " + userType.value);
 
 const {
   data: qnaListData,
@@ -78,26 +76,21 @@ const {
   isError,
 } = useQnaListSearchQuery(cPage, injectedValue, userType);
 
-
 //단 원본 AsIs도 작성자 조차도 비번을 치고 게시글을 눌러야 들어갈 수 있다.
-const showDetailFnc=(qnaIdx)=>{
-    console.log(password)
-    router.push(
-     {   name:"pwdcheckModal",
-        params:  {
-        qnaIdx:qnaIdx}
-    }
-);
-}
+const showDetailFnc = (qnaIdx) => {
+  router.push({
+    name: "pwdcheckModal",
+    params: {
+      qnaIdx: qnaIdx,
+    },
+  });
+};
 
-watch(userType,()=>{
+watch(userType, () => {
+  // console.log(userType.value)
 
-    console.log(userType.value)
-
-    refetch(cPage, injectedValue,userType)
-})
-
-
+  refetch(cPage, injectedValue, userType);
+});
 </script>
 
 <style lang="scss" scoped>
@@ -127,12 +120,10 @@ table {
     opacity: 0.9;
     cursor: pointer;
   }
-  
 }
-.ans_content{
-    background-color: #ff5862;
-    color: white;
-    font-weight: 600;
+.ans_content {
+  background-color: #ff5862;
+  color: white;
+  font-weight: 600;
 }
-
 </style>

@@ -79,7 +79,17 @@
         <div class="sameInfocss">
           <div class="hiringInfo">채용절차</div>
           <div class="threeButtonWrapper">
-            <div class="resumebtn" @click="resumeFnc(infoList.resIdx)">지원자이력서보기</div>
+            <div
+              class="resumebtn"
+              @click="
+                {
+                  modalStore.modalState = true;
+                  resIdx = infoList.resIdx;
+                }
+              "
+            >
+              지원자이력서보기
+            </div>
 
             <div class="confrimInfo">
               <div

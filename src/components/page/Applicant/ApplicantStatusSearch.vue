@@ -4,8 +4,12 @@
       <div class="searchBox">
         <div class="searchArea">
           <div>포스팅내역조회</div>
-          <!-- {{ MDetail.hirProcess }} -->
-          <select @click="postIdxChangeFnc" v-model="postIdx" class="postingArea">
+          {{ MDetail.hireProcessArr }}
+          <select
+            @click="postIdxChangeFnc(MDetail.hireProcessArr[postIdx])"
+            v-model="postIdx"
+            class="postingArea"
+          >
             <option v-for="m in MDetail.Md" :value="m.postIdx">{{ m.title }}</option>
           </select>
         </div>
@@ -27,6 +31,9 @@ import { useGetMDetailQuery } from "../../../hook/Applicant/useGetMDetailQuery";
 import { useGetApplicantListQUery } from "../../../hook/Applicant/useGetApplicantListQUery";
 import { ref, inject } from "vue";
 import { watch } from "vue";
+import { useUserInfo } from "../../../stores/userInfo";
+
+const loginId = useUserInfo().user.loginId;
 
 //독립적이다.
 const MDetail = ref({});
@@ -41,6 +48,7 @@ const pageSetting = ref({
 const postIdx = ref(null);
 const choiceStatus = ref(null);
 const injectedValue = inject("provideVal");
+const hireProcessArr = ref([]);
 
 const { data: Mdetail, isSuccess } = useGetMDetailQuery(
   postIdx,
@@ -50,13 +58,17 @@ const { data: Mdetail, isSuccess } = useGetMDetailQuery(
 );
 
 const { data: applicantlist, refetch } = useGetApplicantListQUery(
+  loginId,
+  hireProcessArr,
   postIdx,
   pageSetting,
   choiceStatus,
   injectedValue
 );
 
-const postIdxChangeFnc = () => {
+const postIdxChangeFnc = (x) => {
+  hireProcessArr.value = x;
+
   refetch();
 };
 

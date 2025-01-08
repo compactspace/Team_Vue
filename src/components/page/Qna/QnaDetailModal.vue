@@ -1,39 +1,36 @@
 <template>
-    <!-- 게시글 보기 모달이랑 유사하나 조건문으로 도배되니 그냥 따로 하다 더 만들자. -->
+  <!-- 게시글 보기 모달이랑 유사하나 조건문으로 도배되니 그냥 따로 하다 더 만들자. -->
   <div class="modalWrapper">
-    <div v-if="isLoading">기다려주세요</div>
-    <div v-else>
+    <div class="modalArea">
       <ContextBox>Qna등록</ContextBox>
-      <label> 제목 :<input type="text" v-model="newQnaValue.qnaTit" /> </label>
-      <label>
-        <!-- <input type="hidden" v-model="" /> -->
-        내용 :
-        <input type="text" v-model="newQnaValue.qnaCon" />
-      </label>
-      파일 :<input
-        type="file"
-        style="display: none"
-        id="fileInput"
-        @change="fileChange"
-      />
-      <label class="img-label" htmlFor="fileInput"> 파일 첨부하기 </label>
-      <div>
-        <div v-if="imageUrl">
-          <label>미리보기</label>
-          <img :src="imageUrl" />
-        </div>
-        <div v-else>
-          <label>파일명</label>
-        </div>
+      <div v-if="isLoading">기다려주세요</div>
+      <div v-else>
+        <label> 제목 :<input type="text" v-model="newQnaValue.qnaTit" /> </label>
         <label>
-          비밀번호입력 :
-          <input type="password" v-model="newQnaValue.password" />
+          <!-- <input type="hidden" v-model="" /> -->
+          내용 :
+          <input type="text" v-model="newQnaValue.qnaCon" />
         </label>
-      </div>
-      <div class="button-box">
-        <button @click="qnaApplication">등록하기</button>
-        <button v-if="params.idx" @click="handlerDeleteBtn">삭제</button>
-        <button @click="$router.go(-1)">뒤로가기</button>
+        파일 :<input type="file" style="display: none" id="fileInput" @change="fileChange" />
+        <label class="img-label" htmlFor="fileInput"> 파일 첨부하기 </label>
+        <div>
+          <div v-if="imageUrl">
+            <label>미리보기</label>
+            <img :src="imageUrl" />
+          </div>
+          <div v-else>
+            <label>파일명</label>
+          </div>
+          <label>
+            비밀번호입력 :
+            <input type="password" v-model="newQnaValue.password" />
+          </label>
+        </div>
+        <div class="button-box">
+          <button @click="qnaApplication">등록하기</button>
+          <button v-if="params.idx" @click="handlerDeleteBtn">삭제</button>
+          <button @click="$router.go(-1)">뒤로가기</button>
+        </div>
       </div>
     </div>
   </div>
@@ -50,9 +47,7 @@ const newQnaValue = ref({});
 const fileData = ref("");
 const userInfo = useUserInfo();
 
-const fullSaveData=ref({})
-
-
+const fullSaveData = ref({});
 
 const fileChange = (e) => {
   const fileInfo = e.target.files;
@@ -71,11 +66,10 @@ const fileChange = (e) => {
 
   fileData.value = fileInfo[0];
 
-  console.log(fileData.value);
+  //console.log(fileData.value);
 };
 
 const qnaApplication = async () => {
-
   const textData = {
     loginId: userInfo.user.loginId,
     qna_type: userInfo.user.userType,
@@ -92,15 +86,14 @@ const qnaApplication = async () => {
     })
   );
 
-  fullSaveData.value=formData;
+  fullSaveData.value = formData;
 
-  console.log(fullSaveData.value)
+  //console.log(fullSaveData.value);
   //await axios.post("/prx/api/board/qnaSaveFileForm.do", formData);
-  myQnaSave(fullSaveData)
+  myQnaSave(fullSaveData);
 };
 
-
-const {mutate:myQnaSave}=useMyqQnaSaveDetailMutation(fullSaveData);
+const { mutate: myQnaSave } = useMyqQnaSaveDetailMutation(fullSaveData);
 </script>
 
 <style lang="scss" scoped>
@@ -121,6 +114,16 @@ const {mutate:myQnaSave}=useMyqQnaSaveDetailMutation(fullSaveData);
 
 .modalWrapper {
   background: #ccc;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  width: 80%;
+}
+
+.modalArea {
+  height: 50%;
+  box-shadow: 0px 0px 20px black;
 }
 
 label {

@@ -1,13 +1,10 @@
 import { Notice } from "../api";
 import axios from "axios";
 
-export const MyQnaSaveDetailApi=  async (formData)=>{
+export const MyQnaSaveDetailApi = async (formData) => {
+  // console.log(formData)
 
-console.log(formData)
+  let bodyData = formData.value;
 
-let bodyData=formData.value;
-
-await axios.post(Notice.InsertMyQnaDetail,bodyData)
-
-
-}
+  await axios.post(Notice.InsertMyQnaDetail, bodyData);
+};
